@@ -13,28 +13,26 @@ class Solution:
     learning_rate = 0.01
 
     def train_model(
-        self, 
-        X: NDArray[np.float64], 
-        Y: NDArray[np.float64], 
-        num_iterations: int, 
+        self,
+        X: NDArray[np.float64],
+        Y: NDArray[np.float64],
+        num_iterations: int,
         initial_weights: NDArray[np.float64]
     ) -> NDArray[np.float64]:
 
-        # you will need to call get_derivative() for each weight
-        # and update each one separately based on the learning rate!
-        # return np.round(your_answer, 5)
-
+        #X is Nx3
+        #Y is Nx1
         weights = initial_weights
-        N = len(X)
-        D = len(initial_weights)
+        N = X.shape[0]
+        # For each iteration:
+        for i in range(num_iterations):
+            #   1. Compute predictions with get_model_prediction(X, weights)
+            pred_y = self.get_model_prediction(X, weights)
+            #   2. For each weight index j, compute gradient with get_derivative()
+            for j in range (3):
+                gradient = self.get_derivative(pred_y, Y, N, X, j)
+                #   3. Update: weights[j] -= learning_rate * gradient
+                weights[j] -= self.learning_rate * gradient
 
-        for n in range (num_iterations):
-
-            y_pred = self.get_model_prediction(X, weights)
-            grads = np.zeros(D)
-            for w in range (D):
-                grads[w] = self.get_derivative(y_pred, Y, N, X, w)
-            weights -= (self.learning_rate * grads)
-
+        # Return np.round(final_weights, 5)
         return np.round(weights, 5)
-        
